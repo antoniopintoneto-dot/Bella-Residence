@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel Financeiro — Condomínio Bella Residence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f6f2;
+  --surface: #ffffff;
+  --surface2: #f0efe9;
+  --border: #e4e2da;
+  --text: #1a1916;
+  --text2: #6b6960;
+  --text3: #a09e96;
+  --blue: #1d4ed8;
+  --blue-bg: #eff6ff;
+  --green: #15803d;
+  --green-bg: #f0fdf4;
+  --red: #b91c1c;
+  --red-bg: #fef2f2;
+  --amber: #92400e;
+  --amber-bg: #fffbeb;
+  --teal: #0f766e;
+  --teal-bg: #f0fdfa;
+  --accent: #2d4fd6;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 0;
+}
+
+.header {
+  background: var(--text);
+  color: #fff;
+  padding: 2.5rem 2rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  right: 60px;
+  top: 30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.condo-name {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: #fff;
+}
+
+.condo-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 4px;
+  font-weight: 300;
+}
+
+.period-badge {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.85);
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.header-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.header-stat {
+  border-left: 1px solid rgba(255,255,255,0.15);
+  padding-left: 1rem;
+}
+
+.header-stat:first-child { border-left: none; padding-left: 0; }
+
+.hs-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.45);
+  font-weight: 400;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.hs-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 4px;
+  letter-spacing: -0.5px;
+}
+
+.hs-value.positive { color: #6ee7b7; }
+.hs-value.neutral { color: rgba(255,255,255,0.85); }
+
+.main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin: 2.5rem 0 1rem;
+}
+
+.section-label:first-child { margin-top: 0; }
+
+/* Month cards */
+.months-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.month-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.month-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.month-card.positive::before { background: #22c55e; }
+.month-card.negative::before { background: #ef4444; }
+
+.month-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: .75rem;
+}
+
+.month-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.month-row-label { color: var(--text2); }
+.month-row-value { font-weight: 500; font-family: 'DM Mono', monospace; font-size: 11px; }
+.month-row-value.green { color: var(--green); }
+.month-row-value.red { color: var(--red); }
+
+.month-result {
+  margin-top: .875rem;
+  padding-top: .875rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.month-result-label { font-size: 11px; color: var(--text3); }
+
+.month-result-value {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'DM Mono', monospace;
+}
+
+.month-result-value.pos { color: var(--green); }
+.month-result-value.neg { color: var(--red); }
+
+.month-saldo {
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* Bar chart */
+.bar-chart {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.bar-chart-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.bar-chart-row:last-child { margin-bottom: 0; }
+
+.bcr-label {
+  width: 140px;
+  font-size: 12px;
+  color: var(--text2);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.bcr-bar-wrap {
+  flex: 1;
+  background: var(--surface2);
+  border-radius: 4px;
+  height: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bcr-bar {
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  transition: width .6s ease;
+}
+
+.bcr-value {
+  font-size: 11px;
+  font-weight: 500;
+  font-family: 'DM Mono', monospace;
+  color: var(--text);
+  white-space: nowrap;
+  margin-left: 8px;
+}
+
+/* Alerts */
+.alerts-list { display: flex; flex-direction: column; gap: 10px; }
+
+.alert-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  border-left: 3px solid;
+}
+
+.alert-card.danger { border-left-color: #ef4444; }
+.alert-card.warning { border-left-color: #f59e0b; }
+.alert-card.success { border-left-color: #22c55e; }
+.alert-card.info { border-left-color: #3b82f6; }
+
+.alert-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.alert-card.danger .alert-icon { background: var(--red-bg); }
+.alert-card.warning .alert-icon { background: var(--amber-bg); }
+.alert-card.success .alert-icon { background: var(--green-bg); }
+.alert-card.info .alert-icon { background: var(--blue-bg); }
+
+.alert-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.alert-desc {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+/* Financial position */
+.fin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+.fin-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.fin-card.highlight {
+  background: var(--green-bg);
+  border-color: #bbf7d0;
+}
+
+.fin-card-label { font-size: 11px; color: var(--text3); margin-bottom: 6px; font-weight: 500; letter-spacing: .03em; }
+.fin-card.highlight .fin-card-label { color: var(--green); }
+.fin-card-value { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+.fin-card.highlight .fin-card-value { color: var(--green); }
+.fin-card-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.fin-card.highlight .fin-card-sub { color: var(--teal); }
+
+.funds-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.fund-item { font-size: 12px; }
+.fund-name { color: var(--text2); }
+.fund-value { font-weight: 600; color: var(--text); margin-top: 2px; }
+
+/* Inadimplencia */
+.inadimp-card {
+  background: var(--red-bg);
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.inadimp-left { }
+.inadimp-title { font-size: 14px; font-weight: 600; color: var(--red); }
+.inadimp-sub { font-size: 12px; color: var(--text2); margin-top: 3px; }
+.inadimp-value { font-size: 28px; font-weight: 700; color: var(--red); font-family: 'DM Mono', monospace; }
+.inadimp-detail { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+.progress-track {
+  background: #fecaca;
+  border-radius: 4px;
+  height: 6px;
+  width: 200px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--red);
+}
+
+/* Two col */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.col-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.col-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 1rem; }
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .4rem 0;
+  border-bottom: 1px solid var(--surface2);
+  font-size: 12px;
+  gap: 8px;
+}
+
+.item-row:last-child { border-bottom: none; }
+.item-label { color: var(--text2); }
+.item-value { font-weight: 500; font-family: 'DM Mono', monospace; font-size: 11px; white-space: nowrap; }
+
+.badge-sm {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-weight: 600;
+}
+
+.badge-red { background: var(--red-bg); color: var(--red); }
+.badge-green { background: var(--green-bg); color: var(--green); }
+.badge-amber { background: var(--amber-bg); color: var(--amber); }
+
+/* Footer */
+.footer {
+  background: var(--text);
+  color: rgba(255,255,255,0.4);
+  font-size: 11px;
+  text-align: center;
+  padding: 1.5rem 2rem;
+  margin-top: 3rem;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .header-stats { grid-template-columns: repeat(2, 1fr); }
+  .months-grid { grid-template-columns: repeat(2, 1fr); }
+  .fin-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .bcr-label { width: 100px; font-size: 11px; }
+  .inadimp-card { flex-direction: column; }
+  .progress-track { width: 100%; }
+}
+
+@media (max-width: 420px) {
+  .months-grid { grid-template-columns: 1fr; }
+  .header-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+.divider { height: 1px; background: var(--border); margin: 2.5rem 0; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="condo-name">Condomínio Bella Residence</div>
+      <div class="condo-sub">CNPJ 14.008.947/0001-53 &nbsp;·&nbsp; Mossoró - RN &nbsp;·&nbsp; 144 unidades</div>
+    </div>
+    <div class="period-badge">Janeiro — Abril 2026</div>
+  </div>
+  <div class="header-stats">
+    <div class="header-stat">
+      <div class="hs-label">Total arrecadado</div>
+      <div class="hs-value neutral">R$ 218.474</div>
+    </div>
+    <div class="header-stat">
+      <div class="hs-label">Total gasto</div>
+      <div class="hs-value neutral">R$ 198.961</div>
+    </div>
+    <div class="header-stat">
+      <div class="hs-label">Resultado do período</div>
+      <div class="hs-value positive">+ R$ 19.513</div>
+    </div>
+    <div class="header-stat">
+      <div class="hs-label">Saldo disponível agora</div>
+      <div class="hs-value neutral">R$ 79.728</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Month cards -->
+  <div class="section-label">Resultado por mês</div>
+  <div class="months-grid">
+
+    <div class="month-card positive">
+      <div class="month-name">Janeiro / 2026</div>
+      <div class="month-row">
+        <span class="month-row-label">Receita</span>
+        <span class="month-row-value green">R$ 50.690</span>
+      </div>
+      <div class="month-row">
+        <span class="month-row-label">Despesas</span>
+        <span class="month-row-value red">R$ 41.071</span>
+      </div>
+      <div class="month-result">
+        <span class="month-result-label">Resultado</span>
+        <div>
+          <div class="month-result-value pos">+ R$ 9.620</div>
+          <div class="month-saldo">Saldo final: R$ 69.835</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="month-card negative">
+      <div class="month-name">Fevereiro / 2026 ⚠</div>
+      <div class="month-row">
+        <span class="month-row-label">Receita</span>
+        <span class="month-row-value green">R$ 52.511</span>
+      </div>
+      <div class="month-row">
+        <span class="month-row-label">Despesas</span>
+        <span class="month-row-value red">R$ 55.229</span>
+      </div>
+      <div class="month-result">
+        <span class="month-result-label">Resultado</span>
+        <div>
+          <div class="month-result-value neg">- R$ 2.718</div>
+          <div class="month-saldo">Saldo final: R$ 67.117</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="month-card positive">
+      <div class="month-name">Março / 2026</div>
+      <div class="month-row">
+        <span class="month-row-label">Receita</span>
+        <span class="month-row-value green">R$ 58.201</span>
+      </div>
+      <div class="month-row">
+        <span class="month-row-label">Despesas</span>
+        <span class="month-row-value red">R$ 53.439</span>
+      </div>
+      <div class="month-result">
+        <span class="month-result-label">Resultado</span>
+        <div>
+          <div class="month-result-value pos">+ R$ 4.762</div>
+          <div class="month-saldo">Saldo final: R$ 71.878</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="month-card positive">
+      <div class="month-name">Abril / 2026 ✓ melhor</div>
+      <div class="month-row">
+        <span class="month-row-label">Receita</span>
+        <span class="month-row-value green">R$ 57.073</span>
+      </div>
+      <div class="month-row">
+        <span class="month-row-label">Despesas</span>
+        <span class="month-row-value red">R$ 49.223</span>
+      </div>
+      <div class="month-result">
+        <span class="month-result-label">Resultado</span>
+        <div>
+          <div class="month-result-value pos">+ R$ 7.850</div>
+          <div class="month-saldo">Saldo final: R$ 79.728</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Inadimplencia -->
+  <div class="section-label">Inadimplência — moradores em atraso</div>
+  <div class="inadimp-card">
+    <div class="inadimp-left">
+      <div class="inadimp-title">⚠ Atenção: valor em aberto é muito alto</div>
+      <div class="inadimp-sub">Corresponde a quase 2 meses inteiros de arrecadação do condomínio</div>
+    </div>
+    <div>
+      <div class="inadimp-value">R$ 110.784</div>
+      <div class="inadimp-detail">334 cobranças · 12–15 unidades · acumulado até março/2026</div>
+      <div style="margin-top:10px">
+        <div class="progress-track"><div class="progress-fill" style="width:72%"></div></div>
+        <div style="font-size:10px;color:var(--red);margin-top:4px">72% de uma mensalidade completa do condomínio</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Maiores gastos -->
+  <div class="section-label">Para onde foi o dinheiro — maiores gastos acumulados (jan–abr)</div>
+  <div class="bar-chart">
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">Salários + férias</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:100%;background:#dbeafe;"></div>
+      </div>
+      <div class="bcr-value" style="color:#1d4ed8">R$ 49.661</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">INSS (encargo)</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:47%;background:#dbeafe;"></div>
+      </div>
+      <div class="bcr-value" style="color:#1d4ed8">R$ 23.227</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">FGTS (encargo)</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:19%;background:#dbeafe;"></div>
+      </div>
+      <div class="bcr-value" style="color:#1d4ed8">R$ 9.305</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">Energia solar (parcelas)</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:18%;background:#d1fae5;"></div>
+      </div>
+      <div class="bcr-value" style="color:#15803d">R$ 8.998</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">Manutenção geral</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:17%;background:#d1fae5;"></div>
+      </div>
+      <div class="bcr-value" style="color:#15803d">R$ 8.341</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">Manutenção segurança</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:14%;background:#fee2e2;"></div>
+      </div>
+      <div class="bcr-value" style="color:#b91c1c">R$ 6.948</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">Energia elétrica</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:13%;background:#fef3c7;"></div>
+      </div>
+      <div class="bcr-value" style="color:#92400e">R$ 6.524</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">Piscina (limpeza)</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:13%;background:#ccfbf1;"></div>
+      </div>
+      <div class="bcr-value" style="color:#0f766e">R$ 6.650</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">Assessoria jurídica</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:13%;background:#ede9fe;"></div>
+      </div>
+      <div class="bcr-value" style="color:#6d28d9">R$ 6.444</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">Jardinagem e podas</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:13%;background:#d1fae5;"></div>
+      </div>
+      <div class="bcr-value" style="color:#15803d">R$ 6.263</div>
+    </div>
+
+    <div class="bar-chart-row">
+      <div class="bcr-label">Vale alimentação</div>
+      <div class="bcr-bar-wrap">
+        <div class="bcr-bar" style="width:15%;background:#dbeafe;"></div>
+      </div>
+      <div class="bcr-value" style="color:#1d4ed8">R$ 7.215</div>
+    </div>
+
+    <div style="margin-top:14px;display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--text2)">
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#dbeafe;display:inline-block;border:1px solid #93c5fd"></span> Pessoal/RH</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#d1fae5;display:inline-block;border:1px solid #6ee7b7"></span> Infraestrutura</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#fee2e2;display:inline-block;border:1px solid #fca5a5"></span> Segurança</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#fef3c7;display:inline-block;border:1px solid #fcd34d"></span> Utilidades</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:10px;height:10px;border-radius:2px;background:#ede9fe;display:inline-block;border:1px solid #c4b5fd"></span> Serviços</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Alerts -->
+  <div class="section-label">⚠ Alertas e desvios críticos</div>
+  <div class="alerts-list">
+
+    <div class="alert-card danger">
+      <div class="alert-icon">🔴</div>
+      <div>
+        <div class="alert-title">Fevereiro fechou no vermelho — único mês negativo do período</div>
+        <div class="alert-desc">A folha de pagamento saltou de R$ 1.134 em janeiro para R$ 21.308 em fevereiro. Isso ocorreu porque janeiro só registrou adiantamentos parciais, enquanto os salários completos de 6 funcionários apareceram somente em fevereiro. O condomínio não estava no prejuízo — foi uma questão de registro contábil.</div>
+      </div>
+    </div>
+
+    <div class="alert-card danger">
+      <div class="alert-icon">🔴</div>
+      <div>
+        <div class="alert-title">Cerca elétrica: R$ 5.900 em reparo (mais caro que trocar)</div>
+        <div class="alert-desc">O serviço foi dividido em duas parcelas: R$ 3.000 em março e R$ 2.900 em abril. Antes de contratar novos reparos na cerca, solicite orçamento de substituição completa para comparar custo-benefício.</div>
+      </div>
+    </div>
+
+    <div class="alert-card warning">
+      <div class="alert-icon">🟡</div>
+      <div>
+        <div class="alert-title">Energia elétrica: variação de 86% em um único mês</div>
+        <div class="alert-desc">De R$ 1.319 em fevereiro para R$ 2.456 em março. Possíveis causas: equipamento ligado desnecessariamente, aquecimento da piscina, iluminação em horário de ponta. A boa notícia: em abril caiu para apenas R$ 687, o menor valor do período.</div>
+      </div>
+    </div>
+
+    <div class="alert-card warning">
+      <div class="alert-icon">🟡</div>
+      <div>
+        <div class="alert-title">Piscina: gastos em manutenção acima do esperado</div>
+        <div class="alert-desc">Março e abril somaram cerca de R$ 3.600 somente na casa de bombas (hidráulica + elétrica), além dos R$ 1.700/mês de limpeza. Avalie solicitar orçamento de substituição integral do sistema de recirculação.</div>
+      </div>
+    </div>
+
+    <div class="alert-card warning">
+      <div class="alert-icon">🟡</div>
+      <div>
+        <div class="alert-title">Energia solar: R$ 2.249/mês — quando termina?</div>
+        <div class="alert-desc">Esse gasto mensal fixo aparece em todos os 4 meses (R$ 8.998 no total). Verifique quantas parcelas ainda restam. Quando encerrar, isso libera ~R$ 27.000 por ano para outras melhorias no condomínio.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- O que melhorou -->
+  <div class="section-label">✅ O que melhorou no período</div>
+  <div class="alerts-list">
+
+    <div class="alert-card success">
+      <div class="alert-icon">🟢</div>
+      <div>
+        <div class="alert-title">Receita cresceu 13% de janeiro a março</div>
+        <div class="alert-desc">De R$ 50.690 (janeiro) para R$ 58.201 (março). Cotas condominiais subiram de R$ 52.787 para R$ 61.425, mostrando crescimento real na arrecadação.</div>
+      </div>
+    </div>
+
+    <div class="alert-card success">
+      <div class="alert-icon">🟢</div>
+      <div>
+        <div class="alert-title">Reserva financeira cresceu 43% — de R$ 39.367 para R$ 56.809</div>
+        <div class="alert-desc">O investimento no Sicredinvest (CDI) rendeu R$ 2.507 em 4 meses, e novas aplicações foram feitas em março. O condomínio está acumulando reserva de forma consistente.</div>
+      </div>
+    </div>
+
+    <div class="alert-card success">
+      <div class="alert-icon">🟢</div>
+      <div>
+        <div class="alert-title">Abril foi o melhor mês: + R$ 7.850 de superávit</div>
+        <div class="alert-desc">Sem rescisões, sem FGTS rescisório, sem despesas extraordinárias de janeiro. As contas se estabilizaram e o resultado foi o maior dos 4 meses analisados.</div>
+      </div>
+    </div>
+
+    <div class="alert-card success">
+      <div class="alert-icon">🟢</div>
+      <div>
+        <div class="alert-title">Energia elétrica em abril caiu 72% em relação a março</div>
+        <div class="alert-desc">De R$ 2.456 para R$ 687 — possivelmente reflexo do sistema de energia solar e ajustes no consumo das áreas comuns. Monitorar nos próximos meses para confirmar a tendência.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Posição financeira -->
+  <div class="section-label">Posição financeira atual — 30/04/2026</div>
+  <div class="fin-grid">
+    <div class="fin-card">
+      <div class="fin-card-label">🏦 Conta digital PJBank</div>
+      <div class="fin-card-value">R$ 6.047</div>
+      <div class="fin-card-sub">Conta de movimentação diária (boletos, pagamentos)</div>
+    </div>
+    <div class="fin-card">
+      <div class="fin-card-label">🏦 Conta corrente Sicredi</div>
+      <div class="fin-card-value">R$ 16.812</div>
+      <div class="fin-card-sub">Cobranças de condôminos via PIX e boleto</div>
+    </div>
+    <div class="fin-card highlight">
+      <div class="fin-card-label">📈 Aplicação Sicredinvest (CDI)</div>
+      <div class="fin-card-value">R$ 56.809</div>
+      <div class="fin-card-sub">Rendimento acumulado: R$ 2.507 desde janeiro</div>
+    </div>
+  </div>
+  <div class="funds-row">
+    <div class="fund-item">
+      <div class="fund-name">Fundo de Reserva</div>
+      <div class="fund-value">R$ 15.235</div>
+    </div>
+    <div class="fund-item">
+      <div class="fund-name">Fundo de Provisão</div>
+      <div class="fund-value">R$ 5.500</div>
+    </div>
+    <div class="fund-item">
+      <div class="fund-name">Fundo Cota Extra</div>
+      <div class="fund-value">R$ 40.000</div>
+    </div>
+    <div class="fund-item">
+      <div class="fund-name">Caixa / carteira</div>
+      <div class="fund-value">R$ 60</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Comparativo por categoria -->
+  <div class="section-label">Comparativo de gastos recorrentes — mês a mês</div>
+  <div class="two-col">
+
+    <div class="col-card">
+      <div class="col-title">Energia elétrica</div>
+      <div class="item-row"><span class="item-label">Janeiro</span><span class="item-value">R$ 2.061</span></div>
+      <div class="item-row"><span class="item-label">Fevereiro</span><span class="item-value">R$ 1.320 <span class="badge-sm badge-green">↓ 36%</span></span></div>
+      <div class="item-row"><span class="item-label">Março</span><span class="item-value">R$ 2.456 <span class="badge-sm badge-red">↑ 86%</span></span></div>
+      <div class="item-row"><span class="item-label">Abril</span><span class="item-value">R$ 687 <span class="badge-sm badge-green">↓ 72%</span></span></div>
+    </div>
+
+    <div class="col-card">
+      <div class="col-title">Assessoria jurídica</div>
+      <div class="item-row"><span class="item-label">Janeiro</span><span class="item-value">R$ 1.613</span></div>
+      <div class="item-row"><span class="item-label">Fevereiro</span><span class="item-value">R$ 1.695 <span class="badge-sm badge-amber">↑ 5%</span></span></div>
+      <div class="item-row"><span class="item-label">Março</span><span class="item-value">R$ 1.695 <span class="badge-sm badge-amber">estável</span></span></div>
+      <div class="item-row"><span class="item-label">Abril</span><span class="item-value">R$ 1.695 <span class="badge-sm badge-amber">estável</span></span></div>
+    </div>
+
+    <div class="col-card">
+      <div class="col-title">Jardinagem e podas</div>
+      <div class="item-row"><span class="item-label">Janeiro</span><span class="item-value">R$ 3.369</span></div>
+      <div class="item-row"><span class="item-label">Fevereiro</span><span class="item-value">R$ 2.088 <span class="badge-sm badge-green">↓ 38%</span></span></div>
+      <div class="item-row"><span class="item-label">Março</span><span class="item-value">R$ 1.246 <span class="badge-sm badge-green">↓ 40%</span></span></div>
+      <div class="item-row"><span class="item-label">Abril</span><span class="item-value">R$ 1.560 <span class="badge-sm badge-amber">↑ 25%</span></span></div>
+    </div>
+
+    <div class="col-card">
+      <div class="col-title">Limpeza da piscina</div>
+      <div class="item-row"><span class="item-label">Janeiro</span><span class="item-value">R$ 1.550</span></div>
+      <div class="item-row"><span class="item-label">Fevereiro</span><span class="item-value">R$ 1.700 <span class="badge-sm badge-amber">↑ 10%</span></span></div>
+      <div class="item-row"><span class="item-label">Março</span><span class="item-value">R$ 1.700 <span class="badge-sm badge-amber">estável</span></span></div>
+      <div class="item-row"><span class="item-label">Abril</span><span class="item-value">R$ 1.700 <span class="badge-sm badge-amber">estável</span></span></div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Recomendações -->
+  <div class="section-label">💡 Recomendações práticas</div>
+  <div class="alerts-list">
+
+    <div class="alert-card info">
+      <div class="alert-icon">🔵</div>
+      <div>
+        <div class="alert-title">Prioridade 1 — Cobrar os inadimplentes com mais força</div>
+        <div class="alert-desc">R$ 110.784 em aberto é um valor crítico. Mesmo recuperando 50%, o condomínio receberia +R$ 55.000 — equivalente a um mês inteiro de arrecadação. Acionar o assessor jurídico para notificações formais nos casos mais antigos.</div>
+      </div>
+    </div>
+
+    <div class="alert-card info">
+      <div class="alert-icon">🔵</div>
+      <div>
+        <div class="alert-title">Prioridade 2 — Investigar variação da energia elétrica</div>
+        <div class="alert-desc">A oscilação entre meses (R$ 687 em abril vs R$ 2.456 em março) precisa de explicação. Recomendamos verificar se equipamentos de grande consumo (bombas, aquecedores, iluminação) estão operando de forma eficiente e no horário correto.</div>
+      </div>
+    </div>
+
+    <div class="alert-card info">
+      <div class="alert-icon">🔵</div>
+      <div>
+        <div class="alert-title">Prioridade 3 — Definir política para sistema hidráulico da piscina</div>
+        <div class="alert-desc">Em 2 meses (março + abril), gastamos ~R$ 3.600 em reparos parciais. Solicitar orçamento de substituição completa (bomba, tubulação, quadro elétrico) para comparar com o custo acumulado de remendos.</div>
+      </div>
+    </div>
+
+    <div class="alert-card info">
+      <div class="alert-icon">🔵</div>
+      <div>
+        <div class="alert-title">Prioridade 4 — Criar um fundo de manutenção preventiva</div>
+        <div class="alert-desc">Os 4 meses mostraram gastos imprevistos recorrentes (extintores, cerca elétrica, câmeras, iluminação). Reservar R$ 2.000 a R$ 3.000 por mês em um fundo específico eliminaria surpresas no orçamento e reduziria o custo de intervenções emergenciais.</div>
+      </div>
+    </div>
+
+    <div class="alert-card info">
+      <div class="alert-icon">🔵</div>
+      <div>
+        <div class="alert-title">Prioridade 5 — Confirmar prazo final do parcelamento da energia solar</div>
+        <div class="alert-desc">R$ 2.249/mês por 4 meses = R$ 8.998. Quando essa parcela encerrar, o condomínio passa a ter ~R$ 27.000/ano livre para reinvestir em infraestrutura, fundo de reserva ou redução da cota condominial.</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="footer">
+  Painel financeiro gerado em maio/2026 · Condomínio Bella Residence · CNPJ 14.008.947/0001-53 · Mossoró - RN
+  <br>Dados extraídos dos demonstrativos analíticos e extratos bancários janeiro–abril 2026
+</div>
+
+</body>
+</html>
